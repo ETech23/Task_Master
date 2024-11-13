@@ -1,0 +1,68 @@
+/* General styling */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Authentication Section */
+#auth-section {
+  margin-top: 50px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  width: 300px;
+  text-align: center;
+}
+
+#auth-section form {
+  display: flex;
+  flex-direction: column;
+}
+
+#auth-section input {
+  padding: 10px;
+  margin: 5px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#auth-section button {
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #5a9;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+#auth-section button:hover {
+  background-color: #489;
+}
+
+.toggle-auth {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.toggle-auth:hover {
+  color: #0056b3;
+}
+
+/* Dashboard Section */
+#dashboard {
+  max-width: 800px;
+  width: 100%;
+  margin: 20px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
