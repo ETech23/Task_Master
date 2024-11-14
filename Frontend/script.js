@@ -33,7 +33,7 @@ loginForm.addEventListener('submit', async function (e) {
   const password = document.getElementById('login-password').value;
 
   try {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
+    const response = await fetch('https://task-master.fly.dev/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -68,7 +68,7 @@ registerForm.addEventListener('submit', async function (e) {
   const password = document.getElementById('register-password').value;
 
   try {
-    const response = await fetch('http://localhost:5000/api/auth/register', {
+    const response = await fetch('https://task-master.fly.dev/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password })
@@ -93,7 +93,7 @@ registerForm.addEventListener('submit', async function (e) {
 // Function to load tasks from the backend
 async function loadTasks() {
   try {
-    const response = await fetch('http://localhost:5000/api/tasks', {
+    const response = await fetch('https://task-master.fly.dev/api/tasks', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`
@@ -137,7 +137,7 @@ async function addTask() {
   const priority = document.getElementById('task-priority').value;
 
   try {
-    const response = await fetch('http://localhost:5000/api/tasks', {
+    const response = await fetch('https://task-master.fly.dev/api/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ async function updateTask(taskId) {
   const newDeadline = prompt('Enter new deadline');
 
   try {
-    const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+    const response = await fetch(`https://task-master.fly.dev/api/tasks/${taskId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -195,7 +195,7 @@ async function updateTask(taskId) {
 // Delete a task
 async function deleteTask(taskId) {
   try {
-    const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+    const response = await fetch(`https://task-master.fly.dev/api/tasks/${taskId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`

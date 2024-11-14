@@ -18,6 +18,11 @@ connectDB();
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
+const cors = require('cors');
+app.use(cors({
+  origin: 'https://vercel.com/etech23s-projects/task-master/DWMSGMif4A1XE8u8HY8BHh3h6d3i'
+}));
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
