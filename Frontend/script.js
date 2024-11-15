@@ -33,7 +33,7 @@ loginForm.addEventListener('submit', async function (e) {
   const password = document.getElementById('login-password').value;
 
   try {
-    const response = await fetch('https://task-master.fly.dev', {
+    const response = await fetch('https://taskmaster.fly.dev/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -68,7 +68,7 @@ registerForm.addEventListener('submit', async function (e) {
   const password = document.getElementById('register-password').value;
 
   try {
-    const response = await fetch('https://task-master.fly.dev/api/auth/register', {
+    const response = await fetch('https://taskmaster.fly.dev/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password })
