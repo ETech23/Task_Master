@@ -12,7 +12,7 @@ app.use(express.json());
 
 // Enable CORS for specific frontend URL on Vercel
 app.use(cors({
-  origin: 'task-master-pied.vercel.app'
+  origin: 'https://task-master-pied.vercel.app'
 }));
 
 // Connect to MongoDB
