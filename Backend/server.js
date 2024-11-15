@@ -11,8 +11,12 @@ const app = express();
 app.use(express.json());
 
 // Enable CORS for specific frontend URL on Vercel
+const cors = require('cors');
+
 app.use(cors({
-  origin: 'https://task-master-pied.vercel.app'
+  origin: 'https://task-master-pied.vercel.app', // Replace with your Vercel frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true // Allow cookies and headers
 }));
 
 // Connect to MongoDB
