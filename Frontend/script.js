@@ -93,7 +93,7 @@ registerForm.addEventListener('submit', async function (e) {
 // Function to load tasks from the backend
 async function loadTasks() {
   try {
-    const response = await fetch('https://task-master.fly.dev/api/tasks', {
+    const response = await fetch('https://taskmaster.fly.dev/api/tasks', {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`
