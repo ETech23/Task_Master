@@ -137,7 +137,7 @@ async function addTask() {
   const priority = document.getElementById('task-priority').value;
 
   try {
-    const response = await fetch('https://task-master.fly.dev/api/tasks', {
+    const response = await fetch('https://taskmaster.fly.dev/api/tasks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -166,7 +166,7 @@ async function updateTask(taskId) {
   const newDeadline = prompt('Enter new deadline');
 
   try {
-    const response = await fetch(`https://task-master.fly.dev/api/tasks/${taskId}`, {
+    const response = await fetch(`https://taskmaster.fly.dev/api/tasks/${taskId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -195,7 +195,7 @@ async function updateTask(taskId) {
 // Delete a task
 async function deleteTask(taskId) {
   try {
-    const response = await fetch(`https://task-master.fly.dev/api/tasks/${taskId}`, {
+    const response = await fetch(`https://taskmaster.fly.dev/api/tasks/${taskId}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
