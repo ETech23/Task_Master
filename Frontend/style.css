@@ -1,7 +1,7 @@
 /* General styling */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f9f9fc;
+  background-color: bisque;
   margin: 0;
   padding: 0;
   display: flex;
@@ -41,7 +41,7 @@ input:focus, select:focus, button:focus {
 button {
   background-color: #5cb85c;
   color: white;
-  border: none;
+  border: solid black;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -56,17 +56,18 @@ table {
   max-width: 800px;
   border-collapse: collapse;
   border: 1px solid #ddd;
-  background-color: #fff;
+  background-color: grey;
 }
 
 table th, table td {
   padding: 12px 15px;
   text-align: center;
   border: 1px solid #ddd;
+  background-color: grey
 }
 
 table th {
-  background-color: #f7f7f7;
+  background-color: gray;
   font-weight: bold;
   color: #555;
 }
@@ -85,6 +86,7 @@ table input, table select {
   font-size: 14px;
   margin: 5px auto;
   box-sizing: border-box;
+  background-color: bisque;
 }
 
 table button {
@@ -156,10 +158,11 @@ table button:hover {
 #dashboard {
   max-width: 800px;
   width: 97%;
-  margin: 20px;
+  margin: 10px;
   padding: 20px;
-  background-color: #fff;
+  background-color: slategray;
   border-radius: 8px;
+  border: none;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   overflow: auto;
 }
@@ -169,12 +172,13 @@ table button:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 97%;
+  width: 95%;
   max-width: 800px;
   margin: 20px auto;
   padding: 10px;
-  background-color: #fff;
+  background-color: slategray;
   border-radius: 8px;
+  border: 5px solid gray;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -186,6 +190,7 @@ table button:hover {
   margin: 0 5px;
   border-radius: 4px;
   border: 1px solid #ddd;
+  background-color: bisque;
 }
 
 #task-filters button {
