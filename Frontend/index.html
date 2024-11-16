@@ -12,6 +12,7 @@
     <h2 id="auth-title">Login</h2>
     <p id="auth-error" style="color: red; display: none;"></p>
 
+    <!-- Login Form -->
     <form id="login-form">
       <input type="email" id="login-email" placeholder="Email" required>
       <input type="password" id="login-password" placeholder="Password" required>
@@ -19,6 +20,7 @@
       <p>Don't have an account? <span class="toggle-auth" onclick="toggleForm('register')">Register here</span></p>
     </form>
 
+    <!-- Registration Form -->
     <form id="register-form" style="display: none;">
       <input type="text" id="register-username" placeholder="Username" required>
       <input type="email" id="register-email" placeholder="Email" required>
@@ -28,6 +30,19 @@
     </form>
   </div>
 
+  <!-- Task Search and Filter Section -->
+  <div id="task-filters" style="display: none;">
+    <input type="text" id="task-search" placeholder="Search tasks...">
+    <select id="filter-priority">
+      <option value="">All Priorities</option>
+      <option value="low">Low</option>
+      <option value="medium">Medium</option>
+      <option value="high">High</option>
+    </select>
+    <input type="date" id="filter-date">
+    <button onclick="logout()">Logout</button>
+  </div>
+  
   <!-- Dashboard Section -->
   <div id="dashboard" style="display: none;">
     <h1>Task Manager Dashboard</h1>
@@ -42,16 +57,22 @@
         </tr>
       </thead>
       <tbody id="task-list">
+        <!-- New Task Row -->
         <tr id="new-task-row">
           <td><input type="text" id="task-title" placeholder="Enter title" required></td>
           <td><input type="text" id="task-description" placeholder="Enter description" required></td>
           <td><input type="date" id="task-deadline" required></td>
           <td>
-            <select id="task-priority">
-              <option value="low">Low</option>
-              <option value="medium">Medium</option>
-              <option value="high">High</option>
-            </select>
+            <div class="priority-selector">
+              <input type="radio" id="priority-low" name="task-priority" value="low">
+              <label for="priority-low" class="priority-button low">Low</label>
+
+              <input type="radio" id="priority-medium" name="task-priority" value="medium">
+              <label for="priority-medium" class="priority-button medium">Medium</label>
+
+              <input type="radio" id="priority-high" name="task-priority" value="high">
+              <label for="priority-high" class="priority-button high">High</label>
+            </div>
           </td>
           <td>
             <button onclick="addTask()">Add Task</button>

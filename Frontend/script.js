@@ -6,9 +6,19 @@ const errorDisplay = document.getElementById("auth-error");
 const loginForm = document.getElementById("login-form");
 const registerForm = document.getElementById("register-form");
 const authTitle = document.getElementById("auth-title");
+const searchBar = document.getElementById("task-search");
+const filterPriority = document.getElementById("filter-priority");
+const filterDate = document.getElementById("filter-date");
 
 // Retrieve the token from local storage
 let token = localStorage.getItem("token");
+
+// Check if the user is already logged in
+if (token) {
+  authSection.style.display = "none";
+  dashboardSection.style.display = "block";
+  loadTasks();
+}
 
 // Function to toggle between Login and Registration forms
 function toggleForm(formType) {
@@ -46,7 +56,7 @@ loginForm.addEventListener("submit", async (e) => {
 
       authSection.style.display = "none";
       dashboardSection.style.display = "block";
-      await loadTasks();
+      loadTasks();
     } else {
       handleError(data.error || "Invalid login credentials");
     }
@@ -82,9 +92,15 @@ registerForm.addEventListener("submit", async (e) => {
 });
 
 // Function to load tasks from the backend
-async function loadTasks() {
+async function loadTasks(filters = {}) {
   try {
-    const response = await fetch("https://taskmaster.fly.dev/api/tasks", {
+    let url = "https://taskmaster.fly.dev/api/tasks";
+    if (filters.priority || filters.dueDate || filters.search) {
+      const params = new URLSearchParams(filters).toString();
+      url += `?${params}`;
+    }
+
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -164,7 +180,8 @@ async function addTask() {
 
     const data = await response.json();
     if (response.ok) {
-      await loadTasks();
+      alert("Task added successfully!");
+      loadTasks();
     } else {
       handleError(data.error || "Failed to add task.");
     }
@@ -173,57 +190,29 @@ async function addTask() {
   }
 }
 
-// Function to update a task
-async function updateTask(taskId) {
-  const newTitle = prompt("Enter new task title");
-  const newDescription = prompt("Enter new task description");
-  const newPriority = prompt("Enter new priority (low, medium, high)");
-  const newDeadline = prompt("Enter new deadline");
+// Task filtering
+filterPriority.addEventListener("change", () => {
+  const priority = filterPriority.value;
+  const dueDate = filterDate.value;
+  loadTasks({ priority, dueDate });
+});
 
-  try {
-    const response = await fetch(`https://taskmaster.fly.dev/api/tasks/${taskId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        title: newTitle,
-        description: newDescription,
-        priority: newPriority,
-        deadline: newDeadline,
-      }),
-    });
+filterDate.addEventListener("change", () => {
+  const priority = filterPriority.value;
+  const dueDate = filterDate.value;
+  loadTasks({ priority, dueDate });
+});
 
-    const data = await response.json();
-    if (response.ok) {
-      await loadTasks();
-    } else {
-      handleError(data.error || "Failed to update task.");
-    }
-  } catch (error) {
-    handleError("An unexpected error occurred while updating the task.");
-  }
-}
+// Task search
+searchBar.addEventListener("input", () => {
+  const search = searchBar.value;
+  loadTasks({ search });
+});
 
-// Function to delete a task
-async function deleteTask(taskId) {
-  try {
-    const response = await fetch(`https://taskmaster.fly.dev/api/tasks/${taskId}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (response.ok) {
-      await loadTasks();
-    } else {
-      handleError("Failed to delete task.");
-    }
-  } catch (error) {
-    handleError("An unexpected error occurred while deleting the task.");
-  }
+// Logout functionality
+function logout() {
+  localStorage.removeItem("token");
+  location.reload();
 }
 
 // Function to handle errors and display messages
