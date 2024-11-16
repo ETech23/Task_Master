@@ -16,6 +16,7 @@ let token = localStorage.getItem("token");
 // Check if the user is already logged in
 if (token) {
   authSection.style.display = "none";
+  document.getElementById("task-filters").style.display = "block";
   dashboardSection.style.display = "block";
   loadTasks();
 }
@@ -55,6 +56,7 @@ loginForm.addEventListener("submit", async (e) => {
       token = data.token;
 
       authSection.style.display = "none";
+      document.getElementById("task-filters").style.display = "block";
       dashboardSection.style.display = "block";
       loadTasks();
     } else {

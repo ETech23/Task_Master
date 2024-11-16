@@ -32,17 +32,28 @@
 
   <!-- Task Search and Filter Section -->
   <div id="task-filters" style="display: none;">
-    <input type="text" id="task-search" placeholder="Search tasks...">
-    <select id="filter-priority">
+    <input 
+      type="text" 
+      id="task-search" 
+      placeholder="Search tasks..." 
+      oninput="handleSearch()" 
+      style="margin-right: 10px;"
+    >
+    <select id="filter-priority" onchange="handleFilter()" style="margin-right: 10px;">
       <option value="">All Priorities</option>
       <option value="low">Low</option>
       <option value="medium">Medium</option>
       <option value="high">High</option>
     </select>
-    <input type="date" id="filter-date">
-    <button onclick="logout()">Logout</button>
+    <input 
+      type="date" 
+      id="filter-date" 
+      onchange="handleFilter()" 
+      style="margin-right: 10px;"
+    >
+    <button onclick="logout()" style="background-color: #ff4d4d; color: white;">Logout</button>
   </div>
-  
+
   <!-- Dashboard Section -->
   <div id="dashboard" style="display: none;">
     <h1>Task Manager Dashboard</h1>
