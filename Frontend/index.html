@@ -3,17 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Task Manager - Register / Login</title>
+  <title>Task Manager</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
   <!-- Authentication Section -->
   <div id="auth-section">
     <h2 id="auth-title">Login</h2>
     <p id="auth-error" style="color: red; display: none;"></p>
-    
-    <!-- Login Form -->
+
     <form id="login-form">
       <input type="email" id="login-email" placeholder="Email" required>
       <input type="password" id="login-password" placeholder="Password" required>
@@ -21,7 +19,6 @@
       <p>Don't have an account? <span class="toggle-auth" onclick="toggleForm('register')">Register here</span></p>
     </form>
 
-    <!-- Registration Form -->
     <form id="register-form" style="display: none;">
       <input type="text" id="register-username" placeholder="Username" required>
       <input type="email" id="register-email" placeholder="Email" required>
@@ -31,12 +28,38 @@
     </form>
   </div>
 
-  <!-- Dashboard Section (initially hidden) -->
+  <!-- Dashboard Section -->
   <div id="dashboard" style="display: none;">
-    <h1>Task Manager</h1>
-    <!-- Task management features go here -->
+    <h1>Task Manager Dashboard</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Deadline</th>
+          <th>Priority</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="task-list">
+        <tr id="new-task-row">
+          <td><input type="text" id="task-title" placeholder="Enter title" required></td>
+          <td><input type="text" id="task-description" placeholder="Enter description" required></td>
+          <td><input type="date" id="task-deadline" required></td>
+          <td>
+            <select id="task-priority">
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </td>
+          <td>
+            <button onclick="addTask()">Add Task</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div id="task-list"></div>
 
   <script src="script.js"></script>
 </body>

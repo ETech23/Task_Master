@@ -1,215 +1,233 @@
 // DOM Elements
-const authSection = document.getElementById('auth-section');
-const dashboardSection = document.getElementById('dashboard');
-const taskList = document.getElementById('task-list');
-const errorDisplay = document.getElementById('auth-error');
-const loginForm = document.getElementById('login-form');
-const registerForm = document.getElementById('register-form');
-const authTitle = document.getElementById('auth-title');
+const authSection = document.getElementById("auth-section");
+const dashboardSection = document.getElementById("dashboard");
+const taskList = document.getElementById("task-list");
+const errorDisplay = document.getElementById("auth-error");
+const loginForm = document.getElementById("login-form");
+const registerForm = document.getElementById("register-form");
+const authTitle = document.getElementById("auth-title");
 
 // Retrieve the token from local storage
-let token = localStorage.getItem('token');
+let token = localStorage.getItem("token");
 
 // Function to toggle between Login and Registration forms
 function toggleForm(formType) {
-  if (formType === 'register') {
-    loginForm.style.display = 'none';
-    registerForm.style.display = 'block';
-    authTitle.innerText = 'Register';
-    errorDisplay.style.display = 'none';
+  if (formType === "register") {
+    loginForm.style.display = "none";
+    registerForm.style.display = "block";
+    authTitle.innerText = "Register";
+    errorDisplay.style.display = "none";
   } else {
-    loginForm.style.display = 'block';
-    registerForm.style.display = 'none';
-    authTitle.innerText = 'Login';
-    errorDisplay.style.display = 'none';
+    loginForm.style.display = "block";
+    registerForm.style.display = "none";
+    authTitle.innerText = "Login";
+    errorDisplay.style.display = "none";
   }
 }
 
 // Event Listener for Login Form
-loginForm.addEventListener('submit', async function (e) {
+loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  const email = document.getElementById('login-email').value;
-  const password = document.getElementById('login-password').value;
+  const email = document.getElementById("login-email").value;
+  const password = document.getElementById("login-password").value;
 
   try {
-    const response = await fetch('https://taskmaster.fly.dev/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password })
+    const response = await fetch("https://taskmaster.fly.dev/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
     });
 
     const data = await response.json();
-    if (!response.ok) {
-      errorDisplay.style.display = 'block';
-      errorDisplay.innerText = data.error;
-    } else {
-      // Login success
-      errorDisplay.style.display = 'none';
-      localStorage.setItem('token', data.token);
+    if (response.ok) {
+      errorDisplay.style.display = "none";
+      localStorage.setItem("token", data.token);
       token = data.token;
 
-      authSection.style.display = 'none';
-      dashboardSection.style.display = 'block';
-      loadTasks();
+      authSection.style.display = "none";
+      dashboardSection.style.display = "block";
+      await loadTasks();
+    } else {
+      handleError(data.error || "Invalid login credentials");
     }
   } catch (error) {
-    errorDisplay.style.display = 'block';
-    errorDisplay.innerText = "An unexpected error occurred. Please try again.";
+    handleError("An unexpected error occurred. Please try again.");
   }
 });
 
 // Event Listener for Registration Form
-registerForm.addEventListener('submit', async function (e) {
+registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-
-  const username = document.getElementById('register-username').value;
-  const email = document.getElementById('register-email').value;
-  const password = document.getElementById('register-password').value;
+  const username = document.getElementById("register-username").value;
+  const email = document.getElementById("register-email").value;
+  const password = document.getElementById("register-password").value;
 
   try {
-    const response = await fetch('https://taskmaster.fly.dev/api/auth/register', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password })
+    const response = await fetch("https://taskmaster.fly.dev/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password }),
     });
 
     const data = await response.json();
-    if (!response.ok) {
-      errorDisplay.style.display = 'block';
-      errorDisplay.innerText = data.error;
+    if (response.ok) {
+      alert("Registration successful! You can now log in.");
+      toggleForm("login");
     } else {
-      // Registration success
-      errorDisplay.style.display = 'none';
-      alert('Registration successful! You can now log in.');
-      toggleForm('login'); // Switch to login form
+      handleError(data.error || "Registration failed.");
     }
   } catch (error) {
-    errorDisplay.style.display = 'block';
-    errorDisplay.innerText = "An unexpected error occurred. Please try again.";
+    handleError("An unexpected error occurred. Please try again.");
   }
 });
 
 // Function to load tasks from the backend
 async function loadTasks() {
   try {
-    const response = await fetch('https://taskmaster.fly.dev/api/tasks', {
-      method: 'GET',
+    const response = await fetch("https://taskmaster.fly.dev/api/tasks", {
+      method: "GET",
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     const data = await response.json();
     if (response.ok) {
-      taskList.innerHTML = ''; // Clear previous task list
-
-      // Populate task list
-      data.tasks.forEach(task => {
-        const taskItem = document.createElement('tr');
-        taskItem.innerHTML = `
-          <td>${task.title}</td>
-          <td>${task.description}</td>
-          <td>${task.deadline}</td>
-          <td>${task.priority}</td>
-          <td>
-            <button onclick="updateTask('${task._id}')">Update</button>
-            <button onclick="deleteTask('${task._id}')">Delete</button>
-          </td>
-        `;
-        taskList.appendChild(taskItem);
-      });
+      renderTasks(data.tasks);
     } else {
-      alert('Failed to load tasks.');
+      handleError("Failed to load tasks.");
     }
   } catch (error) {
-    console.error('Error fetching tasks:', error);
+    handleError("An unexpected error occurred while fetching tasks.");
   }
 }
 
-// Task Management Functions
+// Function to render tasks in the table
+function renderTasks(tasks) {
+  // Clear task list and insert "New Task" row
+  taskList.innerHTML = `
+    <tr id="new-task-row">
+      <td><input type="text" id="task-title" placeholder="Title"></td>
+      <td><input type="text" id="task-description" placeholder="Description"></td>
+      <td><input type="date" id="task-deadline"></td>
+      <td>
+        <select id="task-priority">
+          <option value="low">Low</option>
+          <option value="medium">Medium</option>
+          <option value="high">High</option>
+        </select>
+      </td>
+      <td>
+        <button onclick="addTask()">Add Task</button>
+      </td>
+    </tr>
+  `;
 
-// Add a new task
+  // Populate task list
+  tasks.forEach((task) => {
+    const taskItem = document.createElement("tr");
+    taskItem.innerHTML = `
+      <td>${task.title}</td>
+      <td>${task.description}</td>
+      <td>${task.deadline.split("T")[0]}</td>
+      <td>${task.priority}</td>
+      <td>
+        <button onclick="updateTask('${task._id}')">Update</button>
+        <button onclick="deleteTask('${task._id}')">Delete</button>
+      </td>
+    `;
+    taskList.appendChild(taskItem);
+  });
+}
+
+// Function to add a new task
 async function addTask() {
-  const title = document.getElementById('task-title').value;
-  const description = document.getElementById('task-description').value;
-  const deadline = document.getElementById('task-deadline').value;
-  const priority = document.getElementById('task-priority').value;
+  const title = document.getElementById("task-title").value;
+  const description = document.getElementById("task-description").value;
+  const deadline = document.getElementById("task-deadline").value;
+  const priority = document.getElementById("task-priority").value;
+
+  if (!title || !description || !deadline || !priority) {
+    alert("Please fill in all fields.");
+    return;
+  }
 
   try {
-    const response = await fetch('https://taskmaster.fly.dev/api/tasks', {
-      method: 'POST',
+    const response = await fetch("https://taskmaster.fly.dev/api/tasks", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ title, description, deadline, priority })
+      body: JSON.stringify({ title, description, deadline, priority }),
     });
 
     const data = await response.json();
     if (response.ok) {
-      alert('Task added successfully!');
-      loadTasks();
+      await loadTasks();
     } else {
-      alert('Failed to add task.');
+      handleError(data.error || "Failed to add task.");
     }
   } catch (error) {
-    console.error('Error adding task:', error);
+    handleError("An unexpected error occurred while adding the task.");
   }
 }
 
-// Update an existing task
+// Function to update a task
 async function updateTask(taskId) {
-  const newTitle = prompt('Enter new task title');
-  const newDescription = prompt('Enter new task description');
-  const newPriority = prompt('Enter new priority (low, medium, high)');
-  const newDeadline = prompt('Enter new deadline');
+  const newTitle = prompt("Enter new task title");
+  const newDescription = prompt("Enter new task description");
+  const newPriority = prompt("Enter new priority (low, medium, high)");
+  const newDeadline = prompt("Enter new deadline");
 
   try {
     const response = await fetch(`https://taskmaster.fly.dev/api/tasks/${taskId}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         title: newTitle,
         description: newDescription,
         priority: newPriority,
-        deadline: newDeadline
-      })
+        deadline: newDeadline,
+      }),
     });
 
     const data = await response.json();
     if (response.ok) {
-      alert('Task updated successfully!');
-      loadTasks();
+      await loadTasks();
     } else {
-      alert('Failed to update task.');
+      handleError(data.error || "Failed to update task.");
     }
   } catch (error) {
-    console.error('Error updating task:', error);
+    handleError("An unexpected error occurred while updating the task.");
   }
 }
 
-// Delete a task
+// Function to delete a task
 async function deleteTask(taskId) {
   try {
     const response = await fetch(`https://taskmaster.fly.dev/api/tasks/${taskId}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
-    const data = await response.json();
     if (response.ok) {
-      alert('Task deleted successfully!');
-      loadTasks();
+      await loadTasks();
     } else {
-      alert('Failed to delete task.');
+      handleError("Failed to delete task.");
     }
   } catch (error) {
-    console.error('Error deleting task:', error);
+    handleError("An unexpected error occurred while deleting the task.");
   }
+}
+
+// Function to handle errors and display messages
+function handleError(message) {
+  console.error(message);
+  alert(message);
 }
