@@ -1,17 +1,35 @@
-const Task = require('../models/Task');
+const Task = require("../models/Task");
 
 // Get all tasks for a user with optional filtering
 exports.getTasks = async (req, res) => {
-  const { priority, deadline } = req.query;
-  const query = { userId: req.userId };
-  if (priority) query.priority = priority;
-  if (deadline) query.deadline = { $lte: new Date(deadline) };
+  const { search, priority, dueDate } = req.query;
+  const query = { userId: req.userId }; // Filter tasks by the authenticated user
+
+  // Search filter: Match tasks with a title or description containing the search term
+  if (search) {
+    query.$or = [
+      { title: { $regex: search, $options: "i" } }, // Case-insensitive regex for title
+      { description: { $regex: search, $options: "i" } }, // Case-insensitive regex for description
+    ];
+  }
+
+  // Priority filter: Match tasks with the specified priority
+  if (priority) {
+    query.priority = priority;
+  }
+
+  // Due date filter: Match tasks due on the specified date
+  if (dueDate) {
+    query.deadline = { $eq: new Date(dueDate) };
+  }
 
   try {
+    // Fetch tasks from the database with the constructed query
     const tasks = await Task.find(query);
     res.json({ tasks });
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching tasks' });
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ error: "Error fetching tasks" });
   }
 };
 
@@ -20,11 +38,19 @@ exports.addTask = async (req, res) => {
   const { title, description, deadline, priority } = req.body;
 
   try {
-    const task = new Task({ userId: req.userId, title, description, deadline, priority });
+    const task = new Task({
+      userId: req.userId,
+      title,
+      description,
+      deadline,
+      priority,
+    });
+
     await task.save();
-    res.status(201).json({ message: 'Task added successfully', task });
+    res.status(201).json({ message: "Task added successfully", task });
   } catch (error) {
-    res.status(500).json({ error: 'Error adding task' });
+    console.error("Error adding task:", error);
+    res.status(500).json({ error: "Error adding task" });
   }
 };
 
@@ -35,15 +61,19 @@ exports.updateTask = async (req, res) => {
 
   try {
     const task = await Task.findOneAndUpdate(
-      { _id: id, userId: req.userId },
-      { title, description, deadline, priority },
-      { new: true }
+      { _id: id, userId: req.userId }, // Match task by ID and user
+      { title, description, deadline, priority }, // Update fields
+      { new: true } // Return the updated document
     );
-    if (!task) return res.status(404).json({ error: 'Task not found' });
 
-    res.json({ message: 'Task updated successfully', task });
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.json({ message: "Task updated successfully", task });
   } catch (error) {
-    res.status(500).json({ error: 'Error updating task' });
+    console.error("Error updating task:", error);
+    res.status(500).json({ error: "Error updating task" });
   }
 };
 
@@ -52,47 +82,15 @@ exports.deleteTask = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const task = await Task.findOneAndDelete({ _id: id, userId: req.userId });
-    if (!task) return res.status(404).json({ error: 'Task not found' });
+    const task = await Task.findOneAndDelete({ _id: id, userId: req.userId }); // Match task by ID and user
 
-    res.json({ message: 'Task deleted successfully' });
+    if (!task) {
+      return res.status(404).json({ error: "Task not found" });
+    }
+
+    res.json({ message: "Task deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: 'Error deleting task' });
+    console.error("Error deleting task:", error);
+    res.status(500).json({ error: "Error deleting task" });
   }
 };
-
-// Get tasks with optional filters for search, priority, and due date
-const getTasks = async (req, res) => {
-  try {
-    const { search, priority, dueDate } = req.query;
-
-    const query = {};
-
-    // Add search filter
-    if (search) {
-      query.$or = [
-        { title: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } },
-      ];
-    }
-
-    // Add priority filter
-    if (priority) {
-      query.priority = priority;
-    }
-
-    // Add due date filter
-    if (dueDate) {
-      query.deadline = { $eq: new Date(dueDate) };
-    }
-
-    // Fetch filtered tasks
-    const tasks = await Task.find(query);
-    res.json({ tasks });
-  } catch (error) {
-    console.error("Error fetching tasks:", error);
-    res.status(500).json({ error: "Server error while fetching tasks" });
-  }
-};
-
-module.exports = { getTasks };
