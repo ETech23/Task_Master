@@ -19,6 +19,8 @@ form {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  max-width: 400px;
+  width: 100%;
 }
 
 /* Priority Selector Styling */
@@ -100,7 +102,7 @@ button:hover {
 
 table {
   margin: 20px auto;
-  width: 90%;
+  width: 100%;
   max-width: 800px;
   border-collapse: collapse;
   border: 1px solid #ddd;
@@ -158,7 +160,8 @@ table button:hover {
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  width: 300px;
+  width: 100%;
+  max-width: 400px;
   text-align: center;
 }
 
@@ -210,6 +213,41 @@ table button:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Task Filters Section */
+#task-filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#task-filters input,
+#task-filters select,
+#task-filters button {
+  padding: 8px 12px;
+  font-size: 14px;
+  margin: 0 5px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+#task-filters button {
+  background-color: #ff4d4d;
+  color: white;
+  border: solid black;
+  cursor: pointer;
+}
+
+#task-filters button:hover {
+  background-color: #e60000;
+}
+
 /* Alerts and Error Messages */
 #error-display, #auth-error {
   color: red;
@@ -217,4 +255,28 @@ table button:hover {
   display: none;
   margin-top: 10px;
   text-align: center;
+}
+
+/* Add Task and Update Button - Blue */
+table button.add-task, 
+table button.update-task {
+  background-color: #007bff; /* Blue color */
+  color: white;
+}
+
+table button.add-task:hover, 
+table button.update-task:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Logout and Delete Button - Red */
+#task-filters button, /* Logout button */
+table button.delete-task {
+  background-color: #ff4d4d; /* Red color */
+  color: white;
+}
+
+#task-filters button:hover, 
+table button.delete-task:hover {
+  background-color: #e60000; /* Darker red on hover */
 }
