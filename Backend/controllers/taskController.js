@@ -60,3 +60,39 @@ exports.deleteTask = async (req, res) => {
     res.status(500).json({ error: 'Error deleting task' });
   }
 };
+
+// Get tasks with optional filters for search, priority, and due date
+const getTasks = async (req, res) => {
+  try {
+    const { search, priority, dueDate } = req.query;
+
+    const query = {};
+
+    // Add search filter
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // Add priority filter
+    if (priority) {
+      query.priority = priority;
+    }
+
+    // Add due date filter
+    if (dueDate) {
+      query.deadline = { $eq: new Date(dueDate) };
+    }
+
+    // Fetch filtered tasks
+    const tasks = await Task.find(query);
+    res.json({ tasks });
+  } catch (error) {
+    console.error("Error fetching tasks:", error);
+    res.status(500).json({ error: "Server error while fetching tasks" });
+  }
+};
+
+module.exports = { getTasks };
