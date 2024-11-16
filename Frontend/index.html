@@ -8,6 +8,7 @@
 </head>
 <body>
   <h1 style="text-align: center;">Task Master</h1>
+  
   <!-- Authentication Section -->
   <div id="auth-section">
     <h2 id="auth-title">Login</h2>
@@ -56,13 +57,13 @@
   </div>
 
   <!-- Dashboard Section -->
-  
   <div id="dashboard" style="display: none;">
     <h2>Manage Your Tasks</h2>
     
     <table>
       <thead>
         <tr>
+          <th>#</th> <!-- Serial number header -->
           <th>Title</th>
           <th>Description</th>
           <th>Deadline</th>
@@ -73,6 +74,7 @@
       <tbody id="task-list">
         <!-- New Task Row -->
         <tr id="new-task-row">
+          <td>-</td> <!-- Placeholder for serial number -->
           <td><input type="text" id="task-title" placeholder="Enter title" required></td>
           <td><input type="text" id="task-description" placeholder="Enter description" required></td>
           <td><input type="date" id="task-deadline" required></td>

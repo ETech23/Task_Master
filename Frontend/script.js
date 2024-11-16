@@ -125,6 +125,7 @@ function renderTasks(tasks) {
   // Clear task list and insert "New Task" row
   taskList.innerHTML = `
     <tr id="new-task-row">
+      <td>s/n</td> <!-- Serial number header -->
       <td><input type="text" id="task-title" placeholder="Title"></td>
       <td><input type="text" id="task-description" placeholder="Description"></td>
       <td><input type="date" id="task-deadline"></td>
@@ -141,10 +142,11 @@ function renderTasks(tasks) {
     </tr>
   `;
 
-  // Populate task list
-  tasks.forEach((task) => {
+  // Populate task list with serial numbers
+  tasks.forEach((task, index) => {
     const taskItem = document.createElement("tr");
     taskItem.innerHTML = `
+      <td>${index + 1}</td> <!-- Serial number -->
       <td>${task.title}</td>
       <td>${task.description}</td>
       <td>${task.deadline.split("T")[0]}</td>
