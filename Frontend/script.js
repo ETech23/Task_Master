@@ -152,7 +152,7 @@ function renderTasks(tasks) {
       <td>${task.deadline.split("T")[0]}</td>
       <td>${task.priority}</td>
       <td>
-        <button onclick="updateTask('${task._id}')">Update</button>
+        <button onclick="updateTask('${task._id}', '${task.title}', '${task.description}', '${task.priority}', '${task.deadline}')">Update</button>
         <button onclick="deleteTask('${task._id}')">Delete</button>
       </td>
     `;
