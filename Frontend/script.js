@@ -194,6 +194,70 @@ async function addTask() {
   }
 }
 
+// Function to update a task
+async function updateTask(taskId, currentTitle, currentDescription, currentPriority, currentDeadline) {
+  const newTitle = prompt("Enter new title:", currentTitle);
+  const newDescription = prompt("Enter new description:", currentDescription);
+  const newPriority = prompt("Enter new priority (low, medium, high):", currentPriority);
+  const newDeadline = prompt("Enter new deadline (YYYY-MM-DD):", currentDeadline.split("T")[0]);
+
+  if (!newTitle || !newDescription || !newPriority || !newDeadline) {
+    alert("All fields are required to update the task.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`https://taskmaster.fly.dev/api/tasks/${taskId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        title: newTitle,
+        description: newDescription,
+        priority: newPriority,
+        deadline: newDeadline,
+      }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Task updated successfully!");
+      loadTasks();
+    } else {
+      handleError(data.error || "Failed to update task.");
+    }
+  } catch (error) {
+    handleError("An unexpected error occurred while updating the task.");
+  }
+}
+
+// Function to delete a task
+async function deleteTask(taskId) {
+  const confirmDelete = confirm("Are you sure you want to delete this task?");
+  if (!confirmDelete) return;
+
+  try {
+    const response = await fetch(`https://taskmaster.fly.dev/api/tasks/${taskId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert("Task deleted successfully!");
+      loadTasks();
+    } else {
+      handleError(data.error || "Failed to delete task.");
+    }
+  } catch (error) {
+    handleError("An unexpected error occurred while deleting the task.");
+  }
+}
+
 // Task filtering
 filterPriority.addEventListener("change", () => {
   const priority = filterPriority.value;
